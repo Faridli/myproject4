@@ -44,7 +44,7 @@ urlpatterns = [
     # ro
     # -----------------------------
     path('ro/create/',ro_create, name='ro-create'),
-    path('member-get/<str:per_number>/',member_get, name='member-get'),
+    path('member-get/<str:query>/',member_get, name='member-get'),
 
     
     # -----------------------------

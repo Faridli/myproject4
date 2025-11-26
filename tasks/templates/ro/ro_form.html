@@ -58,13 +58,13 @@
 </main>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
     const perNumberField = document.getElementById("id_per_number");
+    const nidField = document.getElementById("id_nid");
     const rankField = document.getElementById("rank");
     const nameField = document.getElementById("name");
 
-    perNumberField.addEventListener("input", () => {
-        const value = perNumberField.value.trim();
+    function fetchMember(value) {
         if (!value) {
             rankField.value = "";
             nameField.value = "";
@@ -78,7 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 nameField.value = data.success ? data.name : "";
             })
             .catch(err => console.error("Error fetching data:", err));
-    });
+    }
+
+    perNumberField.addEventListener("input", () => fetchMember(perNumberField.value.trim()));
+    nidField.addEventListener("input", () => fetchMember(nidField.value.trim()));
 });
+
 </script>
 {% endblock %}

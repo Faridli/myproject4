@@ -254,14 +254,23 @@ def ro_create(request):
             return redirect('ro-create')  # redirect করুন যেখানে চান
     return render(request, 'ro/ro_form.html', {'form': form, 'member': member})
 
-# AJAX view for fetching member details
-def member_get(request, per_number):
+
+
+def member_get(request, query):
     try:
-        member = ForceMember.objects.get(no=per_number)  # আপনার model field অনুযায়ী ঠিক করুন
-        return JsonResponse({
-            "success": True,
-            "rank": member.rank,
-            "name": member.name
-        })
-    except ForceMember.DoesNotExist:
-        return JsonResponse({"success": False})
+        # প্রথমে per_number দিয়ে খুঁজবে, যদি না পাওয়া যায় তাহলে nid দিয়ে খুঁজবে
+        member = ForceMember.objects.filter(no=query).first()
+        if not member:
+            member = ForceMember.objects.filter(nid=query).first()
+
+        if member:
+            return JsonResponse({
+                "success": True,
+                "rank": member.rank,
+                "name": member.name
+            })
+        else:
+            return JsonResponse({"success": False})
+
+    except Exception as e:
+        return JsonResponse({"success": False, "error": str(e)})
