@@ -11,7 +11,9 @@ from tasks.views import (
     duty_delete,
     miroom_visit_create, 
     miroom_daily_report,
-    get_member,
+    get_member, 
+    ro_create,
+    member_get,
 )
 # app_name = "tasks"  
 urlpatterns = [
@@ -38,17 +40,13 @@ urlpatterns = [
     path('mi/create/', miroom_visit_create, name='miroom_visit_create'), 
     path("get-member/<int:per_no>/", get_member, name="get-member"),
 
+    # -----------------------------
+    # ro
+    # -----------------------------
+    path('ro/create/',ro_create, name='ro-create'),
+    path('member-get/<str:per_number>/',member_get, name='member-get'),
 
-    # path('br/',  List_of_All_Branch, name='allbr'),
- 
-    # -----------------------------
-    # Company Views
-    # -----------------------------
     
-   
-    # Optional old path
-
-
     # -----------------------------
     # Member Posting View
     # -----------------------------

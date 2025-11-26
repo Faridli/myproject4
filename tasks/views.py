@@ -2,14 +2,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db.models import Count
-from .models import ForceMember, Duty, MiRoomVisit
+from .models import ForceMember, Duty, MiRoomVisit,Ro
 from .forms import (
     ForceModelForm,
     CompanySelectForm,
     PresentModelForm,
     PermanentModelForm,
     DutyForm,
-    MiRoomVisitForm
+    MiRoomVisitForm,
+    RoForm,
 )
 
 # ---------------------------------------------------
@@ -232,6 +233,35 @@ def get_member(request, per_no):
             "id": member.id,
             "name": member.name,
             "rank": member.get_rank_display()
+        })
+    except ForceMember.DoesNotExist:
+        return JsonResponse({"success": False})
+
+
+
+# -----------------------------
+# Ro Create
+# -----------------------------
+
+# RO Entry form view
+def ro_create(request):
+    form = RoForm()
+    member = None
+    if request.method == "POST":
+        form = RoForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('ro-create')  # redirect করুন যেখানে চান
+    return render(request, 'ro/ro_form.html', {'form': form, 'member': member})
+
+# AJAX view for fetching member details
+def member_get(request, per_number):
+    try:
+        member = ForceMember.objects.get(no=per_number)  # আপনার model field অনুযায়ী ঠিক করুন
+        return JsonResponse({
+            "success": True,
+            "rank": member.rank,
+            "name": member.name
         })
     except ForceMember.DoesNotExist:
         return JsonResponse({"success": False})

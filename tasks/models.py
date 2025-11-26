@@ -124,7 +124,8 @@ class AcctBr(models.Model):
 
 class Ro(models.Model):
     member = models.ForeignKey(ForceMember, on_delete=models.CASCADE, related_name='ro')
-    name = models.CharField(max_length=50, unique=True)
+    destination = models.CharField(max_length=100, default='RAB-1')
+    sing = models.ImageField(upload_to='signatures/', blank=True, null=True)
 
     def __str__(self):
         return self.name

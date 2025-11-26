@@ -1,6 +1,6 @@
 from django import forms
 from datetime import date, datetime
-from .models import ForceMember, PresentAddress, PermanentAddress
+from .models import ForceMember, PresentAddress, PermanentAddress, MiRoomVisit,Duty, Ro
 
 current_year = date.today().year
 
@@ -158,8 +158,7 @@ class CompanySelectForm(forms.ModelForm):
 
 
 # forms.py
-from django import forms
-from .models import Duty, ForceMember
+
 class DutyForm(forms.ModelForm):
 
     member_numbers = forms.CharField(
@@ -211,11 +210,6 @@ class DutyForm(forms.ModelForm):
         }
 
 
-
-
-from django import forms
-from .models import MiRoomVisit, ForceMember
-
 class MiRoomVisitForm(forms.ModelForm):
     per_number = forms.IntegerField(label="Per Number", required=True)
 
@@ -241,3 +235,18 @@ class MiRoomVisitForm(forms.ModelForm):
         if commit:
             instance.save()
         return instance
+
+class RoForm(forms.ModelForm):
+    class Meta:
+        model = Ro  # আপনার model
+        fields = ['member','destination', 'sing']
+
+
+
+# class AcctForm(forms.ModelForm):
+#     per_number = forms.IntegerField(label="Per Number", required=True) 
+#     class Meta:
+#         model = AcctBr 
+#         fields = ['Per_number', 'destination',]
+
+    
