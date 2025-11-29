@@ -1,88 +1,159 @@
 {% extends "dashboard/css.html" %}
 {% load widget_tweaks %}
 
-{% block title %}RO Office{% endblock %}
+{% block title %}RO Entry{% endblock %}
 
 {% block content %}
-<main class="p-6 bg-white rounded-xl shadow-md max-w-3xl mx-auto">
+<main class="p-6 bg-white rounded-xl shadow-md max-w-5xl mx-auto">
 
     <h1 class="bg-amber-500 text-4xl font-bold mb-6 text-center text-gray-900 rounded py-4">RO Entry</h1>
 
-    <form method="POST" enctype="multipart/form-data">
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
         {% csrf_token %}
 
-        <!-- Per Number -->
-        <div class="flex items-center mb-4">
-            <label class="w-40 font-semibold text-lg text-gray-800">Per Number</label>
-            <input type="text" id="id_per_number" 
-                   class="flex-1 border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500">
+        <!-- INPUT CONTAINER -->
+        <div id="input-container" class="space-y-4">
+            <div class="single-block border p-3 rounded bg-gray-50">
+                <div class="flex items-center gap-2 mb-2">
+                    <input type="text" name="per_no" class="per-input flex-1 border border-gray-300 rounded px-3 py-2" placeholder="Per Number">
+                    <input type="text" name="nid" class="nid-input flex-1 border border-gray-300 rounded px-3 py-2" placeholder="NID">
+                    <button type="button" class="remove-btn bg-red-600 text-white px-3 py-1 rounded hidden">Remove</button>
+                </div>
+                <div class="mb-2">
+                    <label class="font-semibold">Rank</label>
+                    <input type="text" class="rank-field w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" readonly>
+                </div>
+                <div class="mb-2">
+                    <label class="font-semibold">Name</label>
+                    <input type="text" class="name-field w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" readonly>
+                </div>
+            </div>
         </div>
 
-        <!-- NID -->
-        <div class="flex items-center mb-4">
-            <label class="w-40 font-semibold text-lg text-gray-800">NID</label>
-            <input type="text" id="id_nid" 
-                   class="flex-1 border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500">
+        <!-- ADD MORE -->
+        <button type="button" id="add-more" class="bg-blue-600 text-white px-4 py-2 rounded shadow">
+            + Add More
+        </button>
+
+        <!-- DESTINATION -->
+        <div>
+            <label class="font-semibold text-lg mt-4 block">Destination</label>
+            <input type="text" name="destination" class="w-full border border-gray-300 rounded px-3 py-2 mt-1">
         </div>
 
-        <!-- Rank -->
-        <div class="flex items-center mb-4">
-            <label class="w-40 font-semibold text-lg text-gray-800">Rank</label>
-            <input type="text" id="rank" class="flex-1 border border-gray-300 rounded px-3 py-2 bg-gray-100" readonly>
-        </div>
-
-        <!-- Name -->
-        <div class="flex items-center mb-4">
-            <label class="w-40 font-semibold text-lg text-gray-800">Name</label>
-            <input type="text" id="name" class="flex-1 border border-gray-300 rounded px-3 py-2 bg-gray-100" readonly>
-        </div>
-
-        <!-- Destination -->
-        <div class="flex items-center mb-4">
-            <label class="w-40 font-semibold text-lg text-gray-800">Destination</label>
-            {{ form.destination|add_class:"flex-1 border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"|attr:"id:id_destination" }}
-        </div>
-
-        <!-- Signature -->
-        <div class="flex items-center mb-4">
-            <label class="w-40 font-semibold text-lg text-gray-800">Signature</label>
-            {{ form.sing|add_class:"flex-1 border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500"|attr:"id:id_signature" }}
-        </div>
-
-        <div class="text-center">
-            <button class="bg-blue-600 text-white text-2xl px-6 py-2 rounded hover:bg-blue-700 transition-colors">
+        <!-- SAVE BUTTON -->
+        <div class="text-center mt-4">
+            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded text-2xl font-semibold">
                 Save
             </button>
         </div>
+       
     </form>
+
+    <!-- RESULT TABLE -->
+    {% if ro_entries %}
+    <div class="mt-8 overflow-x-auto">
+        <table class="w-full border-collapse border border-gray-300 text-left">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="border px-3 py-2">Ser</th>
+                    <th class="border px-3 py-2">No</th>
+                    <th class="border px-3 py-2">Rank</th>
+                    <th class="border px-3 py-2">Name</th>
+                    <th class="border px-3 py-2">NID</th>
+                    <th class="border px-3 py-2">Destination</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i, entry in ro_entries.items %}
+                <tr>
+                    <td class="border px-3 py-2">{{ forloop.counter }}</td>
+                    <td class="border px-3 py-2">{{ entry.per_no }}</td>
+                    <td class="border px-3 py-2">{{ entry.rank }}</td>
+                    <td class="border px-3 py-2">{{ entry.name }}</td>
+                    <td class="border px-3 py-2">{{ entry.nid }}</td>
+                    <td class="border px-3 py-2">{{ entry.destination }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+
 </main>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    const perNumberField = document.getElementById("id_per_number");
-    const nidField = document.getElementById("id_nid");
-    const rankField = document.getElementById("rank");
-    const nameField = document.getElementById("name");
+document.addEventListener("DOMContentLoaded", function () {
+    const container = document.getElementById("input-container");
+    const addMoreBtn = document.getElementById("add-more");
 
-    function fetchMember(value) {
-        if (!value) {
-            rankField.value = "";
-            nameField.value = "";
-            return;
-        }
-
-        fetch(`/tasks/member-get/${encodeURIComponent(value)}/`)
-            .then(response => response.json())
-            .then(data => {
-                rankField.value = data.success ? data.rank : "";
-                nameField.value = data.success ? data.name : "";
-            })
-            .catch(err => console.error("Error fetching data:", err));
+    function createBlock() {
+        const block = document.createElement("div");
+        block.className = "single-block border p-3 rounded bg-gray-50 mt-4";
+        block.innerHTML = `
+            <div class="flex items-center gap-2 mb-2">
+                <input type="text" name="per_no" class="per-input flex-1 border border-gray-300 rounded px-3 py-2" placeholder="Per Number">
+                <input type="text" name="nid" class="nid-input flex-1 border border-gray-300 rounded px-3 py-2" placeholder="NID">
+                <button type="button" class="remove-btn bg-red-600 text-white px-3 py-1 rounded">Remove</button>
+            </div>
+            <div class="mb-2">
+                <label class="font-semibold">Rank</label>
+                <input type="text" class="rank-field w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" readonly>
+            </div>
+            <div class="mb-2">
+                <label class="font-semibold">Name</label>
+                <input type="text" class="name-field w-full border border-gray-300 rounded px-3 py-2 bg-gray-100" readonly>
+            </div>
+        `;
+        container.appendChild(block);
+        attachListeners(block);
+        updateRemoveButtons();
     }
 
-    perNumberField.addEventListener("input", () => fetchMember(perNumberField.value.trim()));
-    nidField.addEventListener("input", () => fetchMember(nidField.value.trim()));
-});
+    function attachListeners(block) {
+        const perInput = block.querySelector(".per-input");
+        const nidInput = block.querySelector(".nid-input");
+        const rankField = block.querySelector(".rank-field");
+        const nameField = block.querySelector(".name-field");
+        const removeBtn = block.querySelector(".remove-btn");
 
+        function fetchMember(value) {
+            if (!value) {
+                rankField.value = "";
+                nameField.value = "";
+                return;
+            }
+            fetch(`/tasks/member-get/${encodeURIComponent(value)}/`)
+                .then(res => res.json())
+                .then(data => {
+                    rankField.value = data.success ? data.rank : "";
+                    nameField.value = data.success ? data.name : "";
+                })
+                .catch(err => console.error(err));
+        }
+
+        perInput.addEventListener("input", () => fetchMember(perInput.value.trim()));
+        nidInput.addEventListener("input", () => fetchMember(nidInput.value.trim()));
+
+        removeBtn.addEventListener("click", function () {
+            block.remove();
+            updateRemoveButtons();
+        });
+    }
+
+    function updateRemoveButtons() {
+        const allBlocks = document.querySelectorAll(".single-block");
+        const allRemove = document.querySelectorAll(".remove-btn");
+        allRemove.forEach(btn => btn.classList.remove("hidden"));
+        if (allBlocks.length === 1) {
+            allRemove[0].classList.add("hidden");
+        }
+    }
+
+    const initialBlock = document.querySelector(".single-block");
+    attachListeners(initialBlock);
+    updateRemoveButtons();
+    addMoreBtn.addEventListener("click", createBlock);
+});
 </script>
 {% endblock %}

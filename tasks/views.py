@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse
-from django.db.models import Count
+from django.db.models import Count,Max, Min
 from .models import ForceMember, Duty, MiRoomVisit,Ro
 from .forms import (
     ForceModelForm,
@@ -11,6 +11,7 @@ from .forms import (
     DutyForm,
     MiRoomVisitForm,
     RoForm,
+   
 )
 
 # ---------------------------------------------------
@@ -243,7 +244,6 @@ def get_member(request, per_no):
 # Ro Create
 # -----------------------------
 
-# RO Entry form view
 def ro_create(request):
     form = RoForm()
     member = None
@@ -251,8 +251,14 @@ def ro_create(request):
         form = RoForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('ro-create')  # redirect করুন যেখানে চান
-    return render(request, 'ro/ro_form.html', {'form': form, 'member': member})
+            return redirect('ro-list')  # redirect করুন যেখানে চান 
+    else:
+        print(form.errors)
+    return render(request, 'ro/ro_form.html', {'form': form, 'member': member}) 
+
+def ro_list(request):
+    ro_entries = Ro.objects.all().order_by('-id')
+    return render(request, 'ro/ro_list.html', {'ro_entries': ro_entries})
 
 
 
@@ -274,3 +280,8 @@ def member_get(request, query):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
+
+# def Acct_Br(request):
+    
+
+

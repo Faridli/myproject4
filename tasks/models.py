@@ -113,14 +113,22 @@ class PermanentAddress(models.Model):
         return f"Permanent Address of {self.member.name}"
 
 # -------------------------------
-# 🔹 Other Related Models (Duty, MI, Ro, AcctBr, TrgBr, Mt)
-# -------------------------------
-class AcctBr(models.Model):
-    member = models.ForeignKey(ForceMember, on_delete=models.CASCADE, related_name='acctbr')
-    destination = models.CharField(max_length=255)
+# 🔹 Acct Br
+# # -------------------------------
+# class AcctBr(models.Model):
+#     LPC_CHOICES = [
+#         ('other', ' '),
+#         ('lpcin', 'in'),
+#         ('lpcout', 'out'),
+#     ]
+#     member = models.ForeignKey(ForceMember, on_delete=models.CASCADE, related_name='acctbr')
+#     lpc = models.CharField(max_length=10, choices=LPC_CHOICES, default='lpcin')
+#     destination = models.CharField(max_length=255)
 
-    def __str__(self):
-        return f"{self.member.name} → {self.destination}"
+#     def __str__(self):
+#         return f"{self.member.name}-{self.lpc}"
+
+
 
 class Ro(models.Model):
     member = models.ForeignKey(ForceMember, on_delete=models.CASCADE, related_name='ro')

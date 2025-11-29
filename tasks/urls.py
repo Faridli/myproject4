@@ -13,6 +13,7 @@ from tasks.views import (
     miroom_daily_report,
     get_member, 
     ro_create,
+    ro_list,
     member_get,
 )
 # app_name = "tasks"  
@@ -44,6 +45,7 @@ urlpatterns = [
     # ro
     # -----------------------------
     path('ro/create/',ro_create, name='ro-create'),
+    path('ro/list/',ro_list, name='ro-list'),
     path('member-get/<str:query>/',member_get, name='member-get'),
 
     

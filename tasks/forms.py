@@ -247,6 +247,12 @@ class RoForm(forms.ModelForm):
 #     per_number = forms.IntegerField(label="Per Number", required=True) 
 #     class Meta:
 #         model = AcctBr 
-#         fields = ['Per_number', 'destination',]
-
+#         fields = ['member', 'lpc','destination',] 
+#         wedget = {
+#             'lpc':forms.Select(attrs={'class': 'border border-gray-300 rounded px-4 py-2 w-full'}),
+#             'destination':forms.TextInput(attrs={'class':'border border-gray-300 rounded px-4 py-2 w-full'})
+#         }
     
+             
+          
+            
